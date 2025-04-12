@@ -1,9 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = "https://your-api-gateway-url.com";
-
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: import.meta.env.VITE_GET_QUIZ_API_BASE_URL,
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",

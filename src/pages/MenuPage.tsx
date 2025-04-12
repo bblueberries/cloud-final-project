@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuizStore } from "../store/quizStore";
-import { Question } from "../types/quiz";
-import { quizList } from "../data/quizList";
 import { subscribeToDailyReminder } from "../api/sns";
+import { fetchQuizById } from "../api/quiz";
 import toast from "react-hot-toast";
 
 export default function MenuPage() {
@@ -11,10 +10,25 @@ export default function MenuPage() {
   const startQuiz = useQuizStore((s) => s.startQuiz);
 
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleStart = (questions: Question[], title: string) => {
-    startQuiz(questions, title);
-    navigate("/quiz");
+  // Hardcoded quiz previews until you have a quiz list API
+  const quizzes = [
+    { id: "quiz1", title: "Italian Brainrot Animals" },
+    { id: "quize2", title: "Science of Chaos" },
+  ];
+
+  const handleStart = async (quizId: string) => {
+    try {
+      setIsLoading(true);
+      const quiz = await fetchQuizById(quizId);
+      startQuiz(quiz.questions, quiz.title);
+      navigate("/quiz");
+    } catch (err: any) {
+      toast.error("Failed to load quiz: " + err.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSubscribe = async () => {
@@ -26,7 +40,7 @@ export default function MenuPage() {
     try {
       await subscribeToDailyReminder(email);
       toast.success("Subscribed! Check your inbox to confirm.");
-      setEmail(""); // clear input
+      setEmail("");
     } catch (err: any) {
       toast.error("Subscription failed: " + err.message);
     }
@@ -43,11 +57,12 @@ export default function MenuPage() {
         </div>
 
         <div className="space-y-4">
-          {quizList.map((q) => (
+          {quizzes.map((q) => (
             <button
               key={q.id}
-              onClick={() => handleStart(q.questions, q.title)}
-              className="w-full py-3 text-lg font-semibold bg-blue-500 text-white rounded-xl shadow hover:shadow-lg hover:scale-[1.02] transition"
+              onClick={() => handleStart(q.id)}
+              disabled={isLoading}
+              className="w-full py-3 text-lg font-semibold bg-blue-500 text-white rounded-xl shadow hover:shadow-lg hover:scale-[1.02] transition disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {q.title}
             </button>
@@ -56,7 +71,6 @@ export default function MenuPage() {
 
         <hr className="border-gray-300" />
 
-        {/* Email input + subscribe button */}
         <div className="space-y-3">
           <p className="text-gray-700 font-medium text-sm">
             Want daily meme quiz reminders?
