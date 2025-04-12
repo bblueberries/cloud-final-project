@@ -1,13 +1,5 @@
 import { create } from "zustand";
-
-export type Question = {
-  id: number;
-  question: string;
-  questionImage?: string;
-  choices?: string[];
-  choiceImages?: string[];
-  correctAnswerIndex: number;
-};
+import { Question } from "../types/quiz";
 
 type QuizState = {
   questions: Question[];
@@ -27,7 +19,7 @@ export const useQuizStore = create<QuizState>((set, get) => ({
   score: 0,
   quizTitle: null,
 
-  // ✅ UPDATED startQuiz to accept title
+  //  UPDATED startQuiz to accept title
   startQuiz: (questions, title) =>
     set({
       questions,

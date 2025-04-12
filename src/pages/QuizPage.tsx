@@ -70,7 +70,7 @@ export default function QuizPage() {
               <button
                 key={index}
                 onClick={() => handleSelect(index)}
-                className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl transition font-medium overflow-hidden"
+                className="w-full bg-gray-200 hover:shadow-lg hover:scale-[1.02]  text-gray-800 rounded-xl transition font-medium overflow-hidden"
               >
                 <div className="flex flex-col items-center justify-center p-3 space-y-2">
                   {image && (

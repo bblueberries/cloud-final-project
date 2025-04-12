@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { Question, useQuizStore } from "../store/quizStore";
+import { useQuizStore } from "../store/quizStore";
+import { Question } from "../types/quiz";
 import { quizList } from "../data/quizList";
 
 export default function MenuPage() {
@@ -22,7 +23,7 @@ export default function MenuPage() {
             <button
               key={q.id}
               onClick={() => handleStart(q.questions, q.title)}
-              className="w-full py-3 text-lg font-semibold bg-blue-500 text-white rounded-xl shadow hover:bg-blue-600 transition"
+              className="w-full py-3 text-lg font-semibold bg-blue-500 text-white rounded-xl shadow hover:shadow-lg hover:scale-[1.02] transition"
             >
               {q.title}
             </button>
