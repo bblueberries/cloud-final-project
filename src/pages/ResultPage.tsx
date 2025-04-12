@@ -3,7 +3,8 @@ import { useQuizStore } from "../store/quizStore";
 
 export default function ResultPage() {
   const navigate = useNavigate();
-  const { questions, selectedAnswerIndices, score, resetQuiz } = useQuizStore();
+  const { questions, selectedAnswerIndices, score, resetQuiz, quizTitle } =
+    useQuizStore();
 
   const handleRestart = () => {
     resetQuiz();
@@ -11,15 +12,18 @@ export default function ResultPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-100 via-white to-green-200 flex items-center justify-center p-6">
-      <div className="w-full max-w-2xl bg-white shadow-xl rounded-2xl p-8 space-y-6">
-        <h1 className="text-3xl font-bold text-center text-green-700">
-          Quiz Results
-        </h1>
-        <p className="text-lg text-center text-gray-700">
-          You scored <span className="font-bold">{score}</span> out of{" "}
-          <span className="font-bold">{questions.length}</span>
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-200 flex items-center justify-center p-6">
+      <div className="w-full max-w-xl bg-white shadow-xl rounded-2xl p-8 space-y-6">
+        {/* Quiz Title */}
+        {quizTitle && (
+          <h1 className="text-xl font-bold text-blue-600 text-center">
+            {quizTitle}
+          </h1>
+        )}
+
+        <h2 className="text-2xl font-bold text-center text-gray-800">
+          You scored {score} / {questions.length}
+        </h2>
 
         <div className="space-y-4">
           {questions.map((q, i) => {
