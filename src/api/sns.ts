@@ -1,15 +1,4 @@
-import axios from "axios";
-
-// Replace with your actual API Gateway URL
-const BASE_URL = "https://your-api-gateway-url.com";
-
-const api = axios.create({
-  baseURL: BASE_URL,
-  timeout: 5000,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+import api from "./axiosInt";
 
 export async function subscribeToDailyReminder(email: string): Promise<void> {
   if (!email || !email.includes("@")) {

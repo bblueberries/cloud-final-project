@@ -4,6 +4,7 @@ import { useQuizStore } from "../store/quizStore";
 import { Question } from "../types/quiz";
 import { quizList } from "../data/quizList";
 import { subscribeToDailyReminder } from "../api/sns";
+import toast from "react-hot-toast";
 
 export default function MenuPage() {
   const navigate = useNavigate();
@@ -18,16 +19,16 @@ export default function MenuPage() {
 
   const handleSubscribe = async () => {
     if (!email || !email.includes("@")) {
-      alert("Please enter a valid email.");
+      toast.error("Please enter a valid email address.");
       return;
     }
 
     try {
       await subscribeToDailyReminder(email);
-      alert("🎉 Subscribed successfully! Check your inbox to confirm.");
+      toast.success("Subscribed! Check your inbox to confirm.");
       setEmail(""); // clear input
     } catch (err: any) {
-      alert("❌ Subscription failed: " + err.message);
+      toast.error("Subscription failed: " + err.message);
     }
   };
 

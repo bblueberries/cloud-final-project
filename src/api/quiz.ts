@@ -1,18 +1,6 @@
-import axios from "axios";
+import api from "./axiosInt";
 import { QuestionSet } from "../types/quiz";
 
-//  Base API endpoint
-const BASE_URL = "https://your-api-gateway-url.com";
-
-const api = axios.create({
-  baseURL: BASE_URL,
-  timeout: 5000,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-//  Fetch list of available quizzes
 export async function fetchQuizList(): Promise<
   { id: string; title: string }[]
 > {
