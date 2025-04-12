@@ -13,8 +13,9 @@ type QuizState = {
   questions: Question[];
   currentIndex: number;
   selectedAnswerIndices: number[];
+  quizTitle: string | null;
   score: number;
-  startQuiz: (questions: Question[]) => void;
+  startQuiz: (questions: Question[], title: string) => void;
   selectAnswer: (index: number) => void;
   resetQuiz: () => void;
 };
@@ -24,10 +25,13 @@ export const useQuizStore = create<QuizState>((set, get) => ({
   currentIndex: 0,
   selectedAnswerIndices: [],
   score: 0,
+  quizTitle: null,
 
-  startQuiz: (questions) =>
+  // ✅ UPDATED startQuiz to accept title
+  startQuiz: (questions, title) =>
     set({
       questions,
+      quizTitle: title,
       currentIndex: 0,
       selectedAnswerIndices: [],
       score: 0,
@@ -51,6 +55,7 @@ export const useQuizStore = create<QuizState>((set, get) => ({
   resetQuiz: () =>
     set({
       questions: [],
+      quizTitle: null,
       currentIndex: 0,
       selectedAnswerIndices: [],
       score: 0,

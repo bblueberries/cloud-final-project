@@ -3,7 +3,12 @@ import { useQuizStore } from "../store/quizStore";
 
 export default function QuizPage() {
   const navigate = useNavigate();
-  const { questions, currentIndex, selectAnswer } = useQuizStore();
+  const {
+    questions,
+    currentIndex,
+    selectAnswer,
+    quizTitle, //  pull title from state
+  } = useQuizStore();
 
   const currentQuestion = questions[currentIndex];
 
@@ -12,9 +17,8 @@ export default function QuizPage() {
     return null;
   }
 
-  // ✅ FIX: Only take index now
   const handleSelect = (index: number) => {
-    selectAnswer(index); // ✅ FIX: just pass index
+    selectAnswer(index);
     if (currentIndex + 1 >= questions.length) {
       navigate("/result");
     }
@@ -35,10 +39,19 @@ export default function QuizPage() {
           Question {currentIndex + 1} / {questions.length}
         </div>
 
+        {/*  Quiz Title */}
+        {quizTitle && (
+          <h1 className="text-xl font-bold text-blue-600 text-center">
+            {quizTitle}
+          </h1>
+        )}
+
+        {/* Question Text */}
         <h2 className="text-2xl font-bold text-gray-800">
           {currentQuestion.question}
         </h2>
 
+        {/* Optional Question Image */}
         {currentQuestion.questionImage && (
           <img
             src={currentQuestion.questionImage}
@@ -47,6 +60,7 @@ export default function QuizPage() {
           />
         )}
 
+        {/* Answer Choices */}
         <div className={`grid ${gridClass} gap-4`}>
           {Array.from({ length: choiceCount }).map((_, index) => {
             const text = currentQuestion.choices?.[index];
@@ -55,7 +69,6 @@ export default function QuizPage() {
             return (
               <button
                 key={index}
-                // ✅ FIX: pass index only
                 onClick={() => handleSelect(index)}
                 className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl transition font-medium overflow-hidden"
               >

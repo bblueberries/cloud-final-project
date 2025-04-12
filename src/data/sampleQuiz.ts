@@ -6,7 +6,7 @@ export const sampleQuiz: Question[] = [
     question: "What is the capital of France?",
     // choices: ["Berlin", "Paris", "Rome", "Madrid"],
     questionImage:
-      "https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg",
+      "https://i.pinimg.com/originals/46/41/61/4641611401ecb508c625eebe448da663.gif",
     choiceImages: [
       "https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg",
       "https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg",
