@@ -3,18 +3,19 @@ import { create } from "zustand";
 export type Question = {
   id: number;
   question: string;
-  image?: string;
+  questionImage?: string;
   choices: string[];
-  correctAnswer: string;
+  choiceImages?: string[];
+  correctAnswerIndex: number;
 };
 
 type QuizState = {
   questions: Question[];
   currentIndex: number;
-  selectedAnswers: string[];
+  selectedAnswers: string[]; // store user's selected choice text
   score: number;
   startQuiz: (questions: Question[]) => void;
-  selectAnswer: (answer: string) => void;
+  selectAnswer: (answer: string, index: number) => void;
   resetQuiz: () => void;
 };
 
@@ -32,10 +33,10 @@ export const useQuizStore = create<QuizState>((set, get) => ({
       score: 0,
     }),
 
-  selectAnswer: (answer) => {
+  selectAnswer: (answer, index) => {
     const { questions, currentIndex, selectedAnswers, score } = get();
     const currentQ = questions[currentIndex];
-    const isCorrect = answer === currentQ.correctAnswer;
+    const isCorrect = index === currentQ.correctAnswerIndex;
 
     set({
       selectedAnswers: [...selectedAnswers, answer],

@@ -12,12 +12,14 @@ export default function QuizPage() {
     return null;
   }
 
-  const handleSelect = (choice: string) => {
-    selectAnswer(choice);
+  const handleSelect = (choice: string, index: number) => {
+    selectAnswer(choice, index);
     if (currentIndex + 1 >= questions.length) {
       navigate("/result");
     }
   };
+
+  const hasChoiceImages = !!currentQuestion.choiceImages;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-200 flex items-center justify-center p-6">
@@ -30,16 +32,48 @@ export default function QuizPage() {
           {currentQuestion.question}
         </h2>
 
-        <div className="grid grid-cols-1 gap-4">
-          {currentQuestion.choices.map((choice, index) => (
-            <button
-              key={index}
-              onClick={() => handleSelect(choice)}
-              className="py-3 px-4 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition font-medium"
-            >
-              {choice}
-            </button>
-          ))}
+        {currentQuestion.questionImage && (
+          <img
+            src={currentQuestion.questionImage}
+            alt="question visual"
+            className="w-full h-auto rounded-lg shadow mb-4"
+          />
+        )}
+
+        {/* Grid layout: 2x2 for image choices, 1x4 for text-only */}
+        <div
+          className={`grid ${
+            hasChoiceImages ? "grid-cols-2 gap-4" : "grid-cols-1 gap-4"
+          }`}
+        >
+          {currentQuestion.choices.map((choice, index) => {
+            const image = currentQuestion.choiceImages?.[index];
+
+            return (
+              <button
+                key={index}
+                onClick={() => handleSelect(choice, index)}
+                className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl transition font-medium overflow-hidden"
+              >
+                <div className="flex flex-col items-center justify-center p-3 space-y-2">
+                  {image && (
+                    <img
+                      src={image}
+                      alt={`choice ${index + 1}`}
+                      className="w-full h-32 object-cover rounded"
+                    />
+                  )}
+                  <span
+                    className={`text-center ${
+                      hasChoiceImages ? "text-gray-800 font-semibold" : ""
+                    }`}
+                  >
+                    {choice}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

@@ -23,8 +23,9 @@ export default function ResultPage() {
 
         <div className="space-y-4">
           {questions.map((q, i) => {
+            const correctAnswer = q.choices[q.correctAnswerIndex];
             const userAnswer = selectedAnswers[i];
-            const isCorrect = userAnswer === q.correctAnswer;
+            const isCorrect = userAnswer === correctAnswer;
 
             return (
               <div
@@ -45,14 +46,14 @@ export default function ResultPage() {
                       isCorrect ? "text-green-600" : "text-red-600"
                     }`}
                   >
-                    {userAnswer}
+                    {userAnswer || "No answer"}
                   </span>
                 </p>
                 {!isCorrect && (
                   <p>
                     Correct answer:{" "}
                     <span className="font-semibold text-green-600">
-                      {q.correctAnswer}
+                      {correctAnswer}
                     </span>
                   </p>
                 )}
