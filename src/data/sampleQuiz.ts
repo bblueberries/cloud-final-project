@@ -4,7 +4,7 @@ export const sampleQuiz: Question[] = [
   {
     id: 1,
     question: "What is the capital of France?",
-    choices: ["Berlin", "Paris", "Rome", "Madrid"],
+    // choices: ["Berlin", "Paris", "Rome", "Madrid"],
     questionImage:
       "https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg",
     choiceImages: [

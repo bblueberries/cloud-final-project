@@ -3,7 +3,7 @@ import { useQuizStore } from "../store/quizStore";
 
 export default function ResultPage() {
   const navigate = useNavigate();
-  const { questions, selectedAnswers, score, resetQuiz } = useQuizStore();
+  const { questions, selectedAnswerIndices, score, resetQuiz } = useQuizStore();
 
   const handleRestart = () => {
     resetQuiz();
@@ -23,40 +23,80 @@ export default function ResultPage() {
 
         <div className="space-y-4">
           {questions.map((q, i) => {
-            const correctAnswer = q.choices[q.correctAnswerIndex];
-            const userAnswer = selectedAnswers[i];
-            const isCorrect = userAnswer === correctAnswer;
+            const correctIndex = q.correctAnswerIndex;
+            const selectedIndex = selectedAnswerIndices[i];
+
+            const correctText = q.choices?.[correctIndex];
+            const correctImage = q.choiceImages?.[correctIndex];
+
+            const userText = q.choices?.[selectedIndex];
+            const userImage = q.choiceImages?.[selectedIndex];
+
+            const isCorrect = selectedIndex === correctIndex;
 
             return (
               <div
                 key={q.id}
-                className={`p-4 border rounded-lg ${
+                className={`p-4 border rounded-lg space-y-2 ${
                   isCorrect
                     ? "border-green-300 bg-green-50"
                     : "border-red-300 bg-red-50"
                 }`}
               >
-                <p className="font-semibold mb-1 text-gray-800">
+                <p className="font-semibold text-gray-800">
                   Q{i + 1}: {q.question}
                 </p>
-                <p>
-                  Your answer:{" "}
-                  <span
-                    className={`font-semibold ${
-                      isCorrect ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {userAnswer || "No answer"}
-                  </span>
-                </p>
-                {!isCorrect && (
-                  <p>
-                    Correct answer:{" "}
-                    <span className="font-semibold text-green-600">
-                      {correctAnswer}
-                    </span>
-                  </p>
-                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                  {/* User's Answer */}
+                  <div>
+                    <p className="text-sm text-gray-500">Your answer:</p>
+                    <div className="flex flex-col items-start">
+                      {userImage && (
+                        <img
+                          src={userImage}
+                          alt="your answer"
+                          className="w-32 h-24 object-cover rounded"
+                        />
+                      )}
+                      {userText && (
+                        <span
+                          className={`font-semibold ${
+                            isCorrect ? "text-green-600" : "text-red-600"
+                          }`}
+                        >
+                          {userText}
+                        </span>
+                      )}
+                      {!userText && !userImage && (
+                        <span className="text-red-600 font-semibold">
+                          No answer
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Correct Answer */}
+                  {!isCorrect && (
+                    <div>
+                      <p className="text-sm text-gray-500">Correct answer:</p>
+                      <div className="flex flex-col items-start">
+                        {correctImage && (
+                          <img
+                            src={correctImage}
+                            alt="correct answer"
+                            className="w-32 h-24 object-cover rounded"
+                          />
+                        )}
+                        {correctText && (
+                          <span className="font-semibold text-green-600">
+                            {correctText}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             );
           })}

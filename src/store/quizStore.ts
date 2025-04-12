@@ -4,7 +4,7 @@ export type Question = {
   id: number;
   question: string;
   questionImage?: string;
-  choices: string[];
+  choices?: string[];
   choiceImages?: string[];
   correctAnswerIndex: number;
 };
@@ -12,34 +12,37 @@ export type Question = {
 type QuizState = {
   questions: Question[];
   currentIndex: number;
-  selectedAnswers: string[]; // store user's selected choice text
+  selectedAnswerIndices: number[];
   score: number;
   startQuiz: (questions: Question[]) => void;
-  selectAnswer: (answer: string, index: number) => void;
+  selectAnswer: (index: number) => void;
   resetQuiz: () => void;
 };
 
 export const useQuizStore = create<QuizState>((set, get) => ({
   questions: [],
   currentIndex: 0,
-  selectedAnswers: [],
+  selectedAnswerIndices: [],
   score: 0,
 
   startQuiz: (questions) =>
     set({
       questions,
       currentIndex: 0,
-      selectedAnswers: [],
+      selectedAnswerIndices: [],
       score: 0,
     }),
 
-  selectAnswer: (answer, index) => {
-    const { questions, currentIndex, selectedAnswers, score } = get();
+  selectAnswer: (selectedIndex) => {
+    const { questions, currentIndex, selectedAnswerIndices, score } = get();
     const currentQ = questions[currentIndex];
-    const isCorrect = index === currentQ.correctAnswerIndex;
+    const isCorrect = selectedIndex === currentQ.correctAnswerIndex;
+
+    const updatedSelections = [...selectedAnswerIndices];
+    updatedSelections[currentIndex] = selectedIndex;
 
     set({
-      selectedAnswers: [...selectedAnswers, answer],
+      selectedAnswerIndices: updatedSelections,
       currentIndex: currentIndex + 1,
       score: isCorrect ? score + 1 : score,
     });
@@ -49,7 +52,7 @@ export const useQuizStore = create<QuizState>((set, get) => ({
     set({
       questions: [],
       currentIndex: 0,
-      selectedAnswers: [],
+      selectedAnswerIndices: [],
       score: 0,
     }),
 }));

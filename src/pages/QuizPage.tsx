@@ -12,14 +12,21 @@ export default function QuizPage() {
     return null;
   }
 
-  const handleSelect = (choice: string, index: number) => {
-    selectAnswer(choice, index);
+  // ✅ FIX: Only take index now
+  const handleSelect = (index: number) => {
+    selectAnswer(index); // ✅ FIX: just pass index
     if (currentIndex + 1 >= questions.length) {
       navigate("/result");
     }
   };
 
-  const hasChoiceImages = !!currentQuestion.choiceImages;
+  const choiceCount =
+    currentQuestion.choices?.length ||
+    currentQuestion.choiceImages?.length ||
+    0;
+
+  const isImageGrid = !!currentQuestion.choiceImages;
+  const gridClass = isImageGrid ? "grid-cols-2" : "grid-cols-1";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-200 flex items-center justify-center p-6">
@@ -40,19 +47,16 @@ export default function QuizPage() {
           />
         )}
 
-        {/* Grid layout: 2x2 for image choices, 1x4 for text-only */}
-        <div
-          className={`grid ${
-            hasChoiceImages ? "grid-cols-2 gap-4" : "grid-cols-1 gap-4"
-          }`}
-        >
-          {currentQuestion.choices.map((choice, index) => {
+        <div className={`grid ${gridClass} gap-4`}>
+          {Array.from({ length: choiceCount }).map((_, index) => {
+            const text = currentQuestion.choices?.[index];
             const image = currentQuestion.choiceImages?.[index];
 
             return (
               <button
                 key={index}
-                onClick={() => handleSelect(choice, index)}
+                // ✅ FIX: pass index only
+                onClick={() => handleSelect(index)}
                 className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl transition font-medium overflow-hidden"
               >
                 <div className="flex flex-col items-center justify-center p-3 space-y-2">
@@ -63,13 +67,9 @@ export default function QuizPage() {
                       className="w-full h-32 object-cover rounded"
                     />
                   )}
-                  <span
-                    className={`text-center ${
-                      hasChoiceImages ? "text-gray-800 font-semibold" : ""
-                    }`}
-                  >
-                    {choice}
-                  </span>
+                  {text && (
+                    <span className="text-center font-semibold">{text}</span>
+                  )}
                 </div>
               </button>
             );
