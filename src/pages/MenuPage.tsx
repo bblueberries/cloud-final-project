@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuizStore } from "../store/quizStore";
 import { subscribeToDailyReminder } from "../api/sns";
 import { fetchQuizById, fetchQuizList } from "../api/quiz";
+import PacmanLoader from "react-spinners/PacmanLoader";
 import toast from "react-hot-toast";
 
 export default function MenuPage() {
@@ -14,12 +15,20 @@ export default function MenuPage() {
   const [quizzes, setQuizzes] = useState<{ id: string; title: string }[]>([]);
 
   useEffect(() => {
-    fetchQuizList()
-      .then(setQuizzes)
-      .catch((err) => {
+    const loadQuizzes = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetchQuizList();
+        setQuizzes(data);
+      } catch (err) {
         console.error("Failed to load quiz list:", err);
         toast.error("Failed to load quiz list.");
-      });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadQuizzes();
   }, []);
 
   const handleStart = async (quizId: string) => {
@@ -51,8 +60,15 @@ export default function MenuPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-200 p-6">
-      <div className="bg-white shadow-xl rounded-2xl p-10 max-w-xl w-full text-center space-y-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-200 p-6 relative">
+      {/* Overlay spinner */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-blue-100 bg-opacity-40 backdrop-blur-sm z-50 flex items-center justify-center">
+          <PacmanLoader color="#3B82F6" size={25} />
+        </div>
+      )}
+
+      <div className="bg-white shadow-xl rounded-2xl p-10 max-w-xl w-full text-center space-y-8 z-10">
         <div className="space-y-2">
           <h1 className="text-4xl font-extrabold text-blue-600">Meme Quiz</h1>
           <p className="text-gray-600 text-lg">
@@ -65,8 +81,7 @@ export default function MenuPage() {
             <button
               key={q.id}
               onClick={() => handleStart(q.id)}
-              disabled={isLoading}
-              className="w-full py-3 text-lg font-semibold bg-blue-500 text-white rounded-xl shadow hover:shadow-lg hover:scale-[1.02] transition disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-3 text-lg font-semibold bg-blue-500 text-white rounded-xl shadow hover:shadow-lg hover:scale-[1.02] transition"
             >
               {q.title}
             </button>
