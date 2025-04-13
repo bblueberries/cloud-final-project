@@ -4,16 +4,23 @@ import { QuestionSet } from "../types/quiz";
 export async function fetchQuizList(): Promise<
   { id: string; title: string }[]
 > {
-  const res = await api.get("/quizzes");
-  const body = JSON.parse(res.data.body);
-  return body.quizzes.map((q: QuestionSet) => ({
-    id: q.id,
-    title: q.title,
+  const res = await api.get("/list-quizzes");
+
+  const quizIds: string[] = res.data.quiz_ids;
+
+  if (!Array.isArray(quizIds)) {
+    //incase of null or undefined
+    throw new Error("Invalid quiz list format from API");
+  }
+
+  return quizIds.map((id) => ({
+    id,
+    title: id,
   }));
 }
 
 export async function fetchQuizById(id: string): Promise<QuestionSet> {
-  const res = await api.get("", {
+  const res = await api.get("get-quiz", {
     params: { quiz_id: id },
   });
 

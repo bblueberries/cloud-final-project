@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuizStore } from "../store/quizStore";
 import { subscribeToDailyReminder } from "../api/sns";
-import { fetchQuizById } from "../api/quiz";
+import { fetchQuizById, fetchQuizList } from "../api/quiz";
 import toast from "react-hot-toast";
 
 export default function MenuPage() {
@@ -11,12 +11,16 @@ export default function MenuPage() {
 
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [quizzes, setQuizzes] = useState<{ id: string; title: string }[]>([]);
 
-  // Hardcoded quiz previews until you have a quiz list API
-  const quizzes = [
-    { id: "quiz1", title: "Italian Brainrot Animals" },
-    { id: "quize2", title: "Science of Chaos" },
-  ];
+  useEffect(() => {
+    fetchQuizList()
+      .then(setQuizzes)
+      .catch((err) => {
+        console.error("Failed to load quiz list:", err);
+        toast.error("Failed to load quiz list.");
+      });
+  }, []);
 
   const handleStart = async (quizId: string) => {
     try {
