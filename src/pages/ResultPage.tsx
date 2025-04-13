@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useQuizStore } from "../store/quizStore";
+import { withClickSoundDelay } from "../utils/withClickSoundDelay";
 
 export default function ResultPage() {
   const navigate = useNavigate();
@@ -108,7 +109,7 @@ export default function ResultPage() {
 
         <div className="pt-6 flex justify-center">
           <button
-            onClick={handleRestart}
+            onClick={withClickSoundDelay(handleRestart)}
             className="px-6 py-3 text-lg font-semibold bg-blue-500 text-white rounded-xl shadow hover:bg-blue-600 transition"
           >
             Restart Quiz

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useQuizStore } from "../store/quizStore";
+import { withClickSoundDelay } from "../utils/withClickSoundDelay";
 
 export default function QuizPage() {
   const navigate = useNavigate();
@@ -17,8 +18,9 @@ export default function QuizPage() {
     return null;
   }
 
-  const handleSelect = (index: number) => {
+  const handleSelect = async (index: number) => {
     selectAnswer(index);
+
     if (currentIndex + 1 >= questions.length) {
       navigate("/result");
     }
@@ -69,7 +71,7 @@ export default function QuizPage() {
             return (
               <button
                 key={index}
-                onClick={() => handleSelect(index)}
+                onClick={withClickSoundDelay(() => handleSelect(index))}
                 className="w-full bg-gray-200 hover:shadow-lg hover:scale-[1.02]  text-gray-800 rounded-xl transition font-medium overflow-hidden"
               >
                 <div className="flex flex-col items-center justify-center p-3 space-y-2">

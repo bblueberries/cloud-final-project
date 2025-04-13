@@ -5,6 +5,7 @@ import { subscribeToDailyReminder } from "../api/sns";
 import { fetchQuizById, fetchQuizList } from "../api/quiz";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import toast from "react-hot-toast";
+import { withClickSoundDelay } from "../utils/withClickSoundDelay";
 
 export default function MenuPage() {
   const navigate = useNavigate();
@@ -80,7 +81,7 @@ export default function MenuPage() {
           {quizzes.map((q) => (
             <button
               key={q.id}
-              onClick={() => handleStart(q.id)}
+              onClick={withClickSoundDelay(() => handleStart(q.id))}
               className="w-full py-3 text-lg font-semibold bg-blue-500 text-white rounded-xl shadow hover:shadow-lg hover:scale-[1.02] transition"
             >
               {q.title}
@@ -92,7 +93,7 @@ export default function MenuPage() {
 
         <div className="space-y-3">
           <p className="text-gray-700 font-medium text-sm">
-            Want daily meme quiz reminders?
+            Didn’t get the email? Re-subscribe for daily reminder here.
           </p>
           <div className="flex gap-2">
             <input
@@ -103,7 +104,7 @@ export default function MenuPage() {
               className="flex-1 px-3 py-2 rounded border border-gray-300 text-sm"
             />
             <button
-              onClick={handleSubscribe}
+              onClick={withClickSoundDelay(handleSubscribe)}
               className="px-4 py-2 bg-yellow-300 text-black font-bold text-sm rounded hover:bg-yellow-500 transition"
             >
               Subscribe
