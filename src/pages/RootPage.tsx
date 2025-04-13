@@ -1,7 +1,32 @@
-// src/pages/RootPage.tsx
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { signInWithRedirect, getCurrentUser } from "aws-amplify/auth";
+import toast from "react-hot-toast";
 
 export default function RootPage() {
-  const handleLogin = () => {};
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkLogin = async () => {
+      try {
+        const user = await getCurrentUser();
+        if (user) {
+          navigate("/menu");
+        }
+      } catch {}
+    };
+
+    checkLogin();
+  }, [navigate]);
+
+  const handleLogin = async () => {
+    try {
+      await signInWithRedirect();
+    } catch (err: any) {
+      toast.error(`Login failed: ${err.message || "Unknown error"}`);
+      console.error("Login error:", err);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-white to-pink-200 p-6">

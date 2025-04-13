@@ -9,7 +9,7 @@ export default function ResultPage() {
 
   const handleRestart = () => {
     resetQuiz();
-    navigate("/");
+    navigate("/menu");
   };
 
   return (

@@ -6,6 +6,7 @@ import { fetchQuizById, fetchQuizList } from "../api/quiz";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import toast from "react-hot-toast";
 import { withClickSoundDelay } from "../utils/withClickSoundDelay";
+import { signOut } from "aws-amplify/auth";
 
 export default function MenuPage() {
   const navigate = useNavigate();
@@ -14,6 +15,15 @@ export default function MenuPage() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [quizzes, setQuizzes] = useState<{ id: string; title: string }[]>([]);
+
+  // useEffect(() => {
+  // const logToken = async () => {
+  //   const session = await fetchAuthSession();
+  //   console.log("Access Token:", session.tokens?.accessToken?.toString());
+  // };
+
+  // logToken();
+  // }, []);
 
   useEffect(() => {
     const loadQuizzes = async () => {
@@ -60,8 +70,24 @@ export default function MenuPage() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await signOut();
+    } catch (err: any) {
+      toast.error("Logout failed: " + err.message);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-200 p-6 relative">
+      {/*  Logout Button */}
+      <button
+        onClick={handleLogout}
+        className="absolute top-4 right-4 px-4 py-2 text-sm bg-red-100 text-red-600 border border-red-300 rounded hover:bg-red-200 transition z-50"
+      >
+        Logout
+      </button>
+
       {/* Overlay spinner */}
       {isLoading && (
         <div className="fixed inset-0 bg-blue-100 bg-opacity-40 backdrop-blur-sm z-50 flex items-center justify-center">
