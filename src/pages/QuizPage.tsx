@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useQuizStore } from "../store/quizStore";
 import { withClickSoundDelay } from "../utils/withClickSoundDelay";
+import { useEffect } from "react";
 
 export default function QuizPage() {
   const navigate = useNavigate();
@@ -13,10 +14,13 @@ export default function QuizPage() {
 
   const currentQuestion = questions[currentIndex];
 
-  if (!currentQuestion) {
-    navigate(currentIndex >= questions.length ? "/result" : "/");
-    return null;
-  }
+  useEffect(() => {
+    if (!currentQuestion) {
+      navigate(currentIndex >= questions.length ? "/result" : "/");
+    }
+  }, [currentQuestion, currentIndex, navigate]);
+
+  if (!currentQuestion) return null;
 
   const handleSelect = async (index: number) => {
     selectAnswer(index);
