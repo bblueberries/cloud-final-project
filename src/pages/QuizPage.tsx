@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuizStore } from "../store/quizStore";
 import { withClickSoundDelay } from "../utils/withClickSoundDelay";
 import { useEffect } from "react";
+import { submitScore } from "../api/score";
 
 export default function QuizPage() {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function QuizPage() {
     currentIndex,
     selectAnswer,
     quizTitle, //  pull title from state
+    quizId,
   } = useQuizStore();
 
   const currentQuestion = questions[currentIndex];
@@ -25,7 +27,15 @@ export default function QuizPage() {
   const handleSelect = async (index: number) => {
     selectAnswer(index);
 
-    if (currentIndex + 1 >= questions.length) {
+    const isLast = currentIndex + 1 >= questions.length;
+
+    if (isLast) {
+      try {
+        await submitScore(useQuizStore.getState().score, quizId || "unknown-quiz-id");
+      } catch (err: any) {
+        console.error("Submit score error:", err.message);
+      }
+  
       navigate("/result");
     }
   };

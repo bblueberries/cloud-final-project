@@ -4,12 +4,13 @@ import { Question } from "../types/quiz";
 
 type QuizState = {
   questions: Question[];
+  quizId: string | null;
   quizTitle: string | null;
   currentIndex: number;
   selectedAnswerIndices: number[];
   score: number;
 
-  startQuiz: (questions: Question[], title: string) => void;
+  startQuiz: (questions: Question[], title: string, id: string) => void;
   selectAnswer: (index: number) => void;
   resetQuiz: () => void;
 };
@@ -19,14 +20,16 @@ export const useQuizStore = create<QuizState>()(
     (set, get) => ({
       questions: [],
       quizTitle: null,
+      quizId: null,
       currentIndex: 0,
       selectedAnswerIndices: [],
       score: 0,
 
-      startQuiz: (questions, title) =>
+      startQuiz: (questions, title, id) =>
         set({
           questions,
           quizTitle: title,
+          quizId: id,
           currentIndex: 0,
           selectedAnswerIndices: [],
           score: 0,
@@ -51,6 +54,7 @@ export const useQuizStore = create<QuizState>()(
         set({
           questions: [],
           quizTitle: null,
+          quizId: null,
           currentIndex: 0,
           selectedAnswerIndices: [],
           score: 0,

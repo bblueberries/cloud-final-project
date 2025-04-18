@@ -46,7 +46,7 @@ export default function MenuPage() {
     try {
       setIsLoading(true);
       const quiz = await fetchQuizById(quizId);
-      startQuiz(quiz.questions, quiz.title);
+      startQuiz(quiz.questions, quiz.title, quizId);
       navigate("/quiz");
     } catch (err: any) {
       toast.error("Failed to load quiz: " + err.message);
