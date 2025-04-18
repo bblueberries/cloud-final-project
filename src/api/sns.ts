@@ -1,4 +1,4 @@
-import api from "./axiosInt";
+import api from "./axiosLambda";
 
 export async function subscribeToDailyReminder(email: string): Promise<void> {
   if (!email || !email.includes("@")) {
@@ -6,7 +6,7 @@ export async function subscribeToDailyReminder(email: string): Promise<void> {
   }
 
   try {
-    const response = await api.post("/subscribe", { email });
+    const response = await api.post("/register", { email });
 
     if (response.status !== 200) {
       throw new Error(response.data?.message || "Failed to subscribe");
