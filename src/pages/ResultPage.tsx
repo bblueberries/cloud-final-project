@@ -4,12 +4,16 @@ import { withClickSoundDelay } from "../utils/withClickSoundDelay";
 
 export default function ResultPage() {
   const navigate = useNavigate();
-  const { questions, selectedAnswerIndices, score, resetQuiz, quizTitle } =
+  const { questions, selectedAnswerIndices, score, resetQuiz, quizTitle, quizId } =
     useQuizStore();
 
   const handleRestart = () => {
     resetQuiz();
     navigate("/menu");
+  };
+
+  const handleSeeLeaderboard = () => {
+    navigate(`/leaderboard/${encodeURIComponent(quizId || "")}`);
   };
 
   return (
@@ -107,12 +111,19 @@ export default function ResultPage() {
           })}
         </div>
 
-        <div className="pt-6 flex justify-center">
+        <div className="pt-6 flex justify-center gap-4 flex-wrap">
           <button
             onClick={withClickSoundDelay(handleRestart)}
             className="px-6 py-3 text-lg font-semibold bg-blue-500 text-white rounded-xl shadow hover:bg-blue-600 transition"
           >
             Restart Quiz
+          </button>
+
+          <button
+            onClick={withClickSoundDelay(handleSeeLeaderboard)}
+            className="px-6 py-3 text-lg font-semibold bg-purple-500 text-white rounded-xl shadow hover:bg-purple-600 transition"
+          >
+            See Leaderboard
           </button>
         </div>
       </div>
